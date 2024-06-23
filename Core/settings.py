@@ -29,8 +29,29 @@ ALLOWED_HOSTS = [
 
 # CSRF_COOKIE_DOMAIN = "solopython.com"
 # Cuales son las redes que van a tener permiso a la pagina!
+#in this place put on all the domain that will have access to the applications
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",
+    "http://localhost:8000",
+    "http://127.0.0.1:3000",
+    "http://127.0.0.1:3000",
+  
+]
+
+CORS_ORIGIN_WHITELIST = [
+    'http://localhost:3000',
+    'http://localhost:8000',
+    'http://127.0.0.1:3000',
+    'http://127.0.0.1:3000',
+ 
+] 
+
 CSRF_TRUSTED_ORIGINS = [
     'http://localhost:3000',
+    'http://localhost:8000',
+    'http://127.0.0.1:3000',
+    'http://127.0.0.1:3000',
+   
 ]
 
 # Esto es para poder desplegar la pagina en render!
@@ -48,12 +69,13 @@ DJANGO_APPS  = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'Core'
+    'Core',
+    'import_export'
 ]
 
 
 PROJECT_APPS = [
- 
+ 'apps.user',
 ]
 
 THIRD_PARTY_APPS = [
