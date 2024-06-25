@@ -75,7 +75,7 @@ DJANGO_APPS  = [
 
 
 PROJECT_APPS = [
- 'apps.user',
+ 'apps.user','apps.ml'
 ]
 
 THIRD_PARTY_APPS = [
