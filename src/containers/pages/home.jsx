@@ -1,6 +1,7 @@
 import { connect } from "react-redux";
 import Layout from "../../hocs/layout";
 import { useEffect } from "react";
+import Regression_lineal from "../../components/home/home"
 
 
 
@@ -15,7 +16,7 @@ useEffect (() =>{
 
   return (
     <Layout>
-
+      <Regression_lineal/>
     </Layout>
   );
 }
