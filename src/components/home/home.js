@@ -58,9 +58,16 @@ function Regression_lineal({
     };
 
     const chartConfig = {
+       
         type: 'scatter',
         data: chartData,
         options: {
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'REGRESION LINEAL'
+                }
+            },
             scales: {
                 x: {
                     type: 'linear',

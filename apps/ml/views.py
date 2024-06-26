@@ -135,3 +135,9 @@ class RegresionLinealView(APIView):
             'xlabel_train':'Years of Experience',
             'ylabel_train':'Salary'},status = status.HTTP_200_OK)
         
+
+class ClassificacionView(APIView):
+    def get(self,request,format=None):
+        print("va todo bien")
+    
+        return Response({"mensaje":"todo bien por ahora"}, status = status.HTTP_200_OK)
