@@ -138,6 +138,55 @@ class RegresionLinealView(APIView):
 
 class ClassificacionView(APIView):
     def get(self,request,format=None):
-        print("va todo bien")
-    
+        
+        # 1-) firts step is put the route to open the documents
+        path = os.path.join(settings.BASE_DIR,"apps/ml/helpers/Classificacion/Data.csv")
+        database = pd.read_csv(path)
+        
+        x= database.iloc[:,17:19].values
+        y = database.iloc[:,-1].values
+        
+        # print(x)
+        # print(y)
+        
+        # 2) en este caso todos los datos estan completos y no hay datos faltantes asi que se pasa por encima
+        # 3) in this step we have serializer the depend variable for that to be same that the independient variable
+        
+        from sklearn.compose import ColumnTransformer
+        from sklearn.preprocessing import OneHotEncoder
+        ct = ColumnTransformer(transformers=[("encoder", OneHotEncoder(), [0])],remainder="passthrough")
+        x = np.array(ct.fit_transform(x))
+        x = x[:, :len(ct.transformers_[0][1].categories_[0])]
+
+        # print(x)
+        # print(x)
+        
+        # 4) now we must split the date in train and test
+        
+        from sklearn.model_selection import train_test_split
+        x_train,x_test,y_train,y_test = train_test_split(x,y, test_size = 0.2, random_state = 1)
+        # print(x_train)
+        # print(x_test)
+        # print(y_train)
+        # print(y_test)
+        
+        # 5) in this step we must create the algoritm that wil clasify the data
+        
+        from sklearn.linear_model import LogisticRegression
+        model = LogisticRegression()
+        
+        model.fit(x_train,y_train) 
+        np.set_printoptions(suppress=True)
+        y_predic = model.predict(x_test)       
+        mode_prob = model.predict_proba(x_test)
+        acuracy = model.score(x_test,y_test)
+        print (f"la prediccion fue de : {y_predic}")
+        print (f"la probabilidad fue de {mode_prob}")
+        print (f"la certeza de los valores fue {acuracy}")
+        
+        
+        
+  
+        
+        
         return Response({"mensaje":"todo bien por ahora"}, status = status.HTTP_200_OK)
