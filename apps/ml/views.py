@@ -21,6 +21,7 @@ class PreProcesamientoView(APIView):
         dataset = pd.read_csv(path)
         x = dataset.iloc[:,17:21].values    
         y = dataset.iloc[:,-2].values
+        
         print(x)
         print(y)
         # Con esto lo que hago es reemplazar todos los datos faltantes por el promedio
@@ -143,6 +144,7 @@ class ClassificacionView(APIView):
         path = os.path.join(settings.BASE_DIR,"apps/ml/helpers/Classificacion/Data.csv")
         database = pd.read_csv(path)
         
+        print(database.isnull().mean())
         x= database.iloc[:,17:19].values
         y = database.iloc[:,-1].values
         
