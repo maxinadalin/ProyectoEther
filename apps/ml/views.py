@@ -221,23 +221,111 @@ class LogicRegressionView(APIView):
             
             ct = ColumnTransformer(transformers= [("encoder",OneHotEncoder(), [0])],remainder= "passthrough")
             x = ct.fit_transform(x)
-            print(x)
+            # print(x)
             
             from sklearn.model_selection import train_test_split
             x_train,x_test,y_train,y_test = train_test_split(x,y, test_size = 0.2, random_state = 1 )
-            print(x_train.shape)
+            # print(x_train.shape)
             
-            # from sklearn.linear_model import LogisticRegression
-            # model = LogisticRegression()
-            # model.fit(x_train,y_train)
+            new_data = np.array([["male"]])
+            new_data_processing = ct.transform(new_data)
+
+            # print(new_data_processing)
+            
+            from sklearn.linear_model import LogisticRegression
+            model = LogisticRegression()
+            model.fit(x_train,y_train)
             # print(x_test)
-            # prediccion = model.predict(x_test)
-            # np.set_printoptions(suppress = True)
-            # predict_proba = model.predict_proba(x_test)
-            # accuracy = model.score(x_test,y_test)
-            # print(prediccion)
-            # print(predict_proba)
-            # print(accuracy)
-         
+            prediccion = model.predict(new_data_processing)
+            np.set_printoptions(suppress = True)
+            predict_proba = model.predict_proba(new_data_processing)
+            accuracy = model.score(x_test,y_test)
+            print(f"la prediccion fue de  {prediccion}")
+            print(predict_proba)
+            print(accuracy)
+            print(model.intercept_, model.coef_)
+            
+            return Response ({"mensaje":"probando el response"}, status=status.HTTP_200_OK)
+
+
+class AgeLogicRegressionView(APIView):
+        def get(self, request, format=None):
+            path_test = os.path.join(settings.BASE_DIR,"apps/ml/helpers/Classificacion/test.csv")
+            path_train = os.path.join(settings.BASE_DIR,"apps/ml/helpers/Classificacion/train.csv")
+
+            database_train = pd.read_csv(path_train)
+            # database_test = pd.read_csv(path_test)
+            # print(database_train)
+            # print(database_test)
+            
+            # print(database_train.isnull().mean())
+            # print(database_test.isnull().mean())
+            
+            # we are making the dataset split
+            x = database_train.iloc[:,5].values
+            y = database_train.iloc[:,1].values
+            
+            x = x.reshape(-1,1)
+            y = y.reshape(-1,1)    
+            
+            #in this step we must to delete all nan and put new values in that places
+            
+            from sklearn.impute import SimpleImputer
+            impute =  SimpleImputer(missing_values=np.nan, strategy='mean')
+            impute.fit(x)
+            x = impute.transform(x)
+            
+            
+            print(x)
+            # print(y)
+            
+            # in this spet we should serializer the gender data
+            
+            # from sklearn.compose import ColumnTransformer
+            # from sklearn.preprocessing import OneHotEncoder
+            
+            # ct = ColumnTransformer(transformers= [("encoder",OneHotEncoder(), [0])],remainder= "passthrough")
+            # x = ct.fit_transform(x)
+            # # print(x)
+            
+            from sklearn.model_selection import train_test_split
+            x_train,x_test,y_train,y_test = train_test_split(x,y, test_size = 0.2, random_state = 1 )
+            # print(x_train.shape)
+            
+            # new_data = np.array([["male"]])
+            # new_data_processing = ct.transform(new_data)
+
+            # print(new_data_processing)
+            
+            from sklearn.linear_model import LogisticRegression
+            model = LogisticRegression()
+            model.fit(x_train,y_train)
+            print(f"esta es el teste {x_test}")
+            prediccion = model.predict(x_test)
+            np.set_printoptions(suppress = True)
+            predict_proba = model.predict_proba(x_test)
+            accuracy = model.score(x_test,y_test)
+            print(f"la prediccion fue de  {prediccion}")
+            print(predict_proba)
+            print(accuracy)
+            print(model.intercept_, model.coef_)
+            
+            import math
+            
+            individuos = [56]
+            
+            logistica = np.frompyfunc(lambda b0, b1 , x :
+                                      1 / (1 + math.exp(-(b0 + b1*x))),3,1)
+            
+                # Visualizando datos de entrenamiento
+            # Visualizar set de Entrenamiento
+            tamaño = np.arange(0,100,0.1)
+            probabilidades = logistica(-0.20334135, 0.00989933,tamaño ) 
+            plt.scatter(tamaño, probabilidades , color = 'red')
+            # plt.plot(x_train, lr.predict(x_train), color = 'blue')
+            plt.title('Salary vs Experience (Training set)')
+            plt.xlabel('Years of Experience')
+            plt.ylabel('Salary')
+            plt.show()
             
             return Response ({"mensaje":"probando el response"}, status=status.HTTP_200_OK)
