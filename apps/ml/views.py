@@ -313,19 +313,34 @@ class AgeLogicRegressionView(APIView):
             import math
             
             individuos = [56]
+            b0= -4
+            b1 = 0.1
             
             logistica = np.frompyfunc(lambda b0, b1 , x :
-                                      1 / (1 + math.exp(-(b0 + b1*x))),3,1)
+                                      1 / (1 + np.exp(-(b0 + b1*x))),3,1)
             
                 # Visualizando datos de entrenamiento
             # Visualizar set de Entrenamiento
-            tamaño = np.arange(0,100,0.1)
-            probabilidades = logistica(-0.20334135, 0.00989933,tamaño ) 
-            plt.scatter(tamaño, probabilidades , color = 'red')
-            # plt.plot(x_train, lr.predict(x_train), color = 'blue')
-            plt.title('Salary vs Experience (Training set)')
-            plt.xlabel('Years of Experience')
-            plt.ylabel('Salary')
-            plt.show()
+            tamaño = np.arange(x.min(),x.max(),1)
+            probabilidades = logistica(b0, b1,tamaño ) 
+            # plt.scatter(x, y, color='red', label='Datos de entrenamiento')
+            # plt.plot(tamaño, probabilidades, color='blue', label='Curva logística')
+            # plt.title('Curva Logística Ajustada')
+            # plt.xlabel('Edad')
+            # plt.ylabel('Probabilidad de Compra')
+            # plt.legend()
+            # plt.grid(True)
+            # plt.show()
             
-            return Response ({"mensaje":"probando el response"}, status=status.HTTP_200_OK)
+            x_str = x.flatten().tolist()
+            y_str = y.flatten().tolist()
+            tamaño = tamaño.flatten().tolist()
+            probabilidades = probabilidades.flatten().tolist(),
+            
+            return Response (
+                   {"x":x_str,
+                    "y":y_str ,
+                    "tamaño":tamaño ,
+                    "probabilidades":probabilidades ,
+                    "xlabel":"Edad",
+                    "ylabel":"Probabilidad de Compra"}, status=status.HTTP_200_OK)
